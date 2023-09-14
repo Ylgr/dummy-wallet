@@ -1,0 +1,4 @@
+{
+  "name": "test",
+  "encryptedWallet": "{\"address\":\"704f91c80bd2962089dd0598fea7ae2e3182ed87\",\"id\":\"c3c9c6e1-838f-4b52-a7e7-8f2b6ad93781\",\"version\":3,\"crypto\":{\"cipher\":\"aes-128-ctr\",\"cipherparams\":{\"iv\":\"6bf81743c52a699203c6c4deeafff454\"},\"ciphertext\":\"6699c61b456e0570016a612e0efa496c3add7650d80f4f329f4cc662d1a4d8b9\",\"kdf\":\"scrypt\",\"kdfparams\":{\"salt\":\"fca3bb7109c3da0f7dd6798ec29b8d534eb6260358c3a8da38065c3ce84c24fc\",\"n\":1,\"dklen\":32,\"p\":1,\"r\":8},\"mac\":\"9e6ddcc4bd2bc7561fe377d2ee36e5eb4302f750debdaad1cc718f4c23941151\"}}"
+}
