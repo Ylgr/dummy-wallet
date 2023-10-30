@@ -2,15 +2,19 @@ import {ConnectWallet, useTransferToken, isContractDeployed, ThirdwebSDK, Transa
 import { LocalWallet, SmartWallet } from "@thirdweb-dev/wallets";
 import "./styles/Home.css";
 import account1 from "./mock/account1.json";
-import {ACCOUNT_ABI, ERC20_ABI} from "./mock/constant";
+// import account1 from "./mock/account2.json";
+import {ACCOUNT_ABI, ACCOUNT_FACTORY_ABI, ERC20_ABI} from "./mock/constant";
 import {useState} from "react";
+import {ethers} from "ethers";
 const username = "test";
 const password = "test";
 
 export function createSmartWallet(): SmartWallet {
     const smartWallet = new SmartWallet({
         chain: "goerli",
+        // chain: "binance-testnet",
         factoryAddress: "0xE2f4eDf6135d48F979F58f28B48B8eD03fF82FbF",
+        // factoryAddress: "0x0e5476a5AfD15c1e35ca4d97D220cb9f40617609",
         gasless: true,
         clientId: process.env.REACT_APP_TEMPLATE_CLIENT_ID || "",
         // secretKey: process.env.REACT_APP_ADMIN_WALLET_SECRET_KEY || "",
@@ -67,7 +71,28 @@ export default function Home() {
         setClientAddress(await personalWallet.getAddress());
         setPersonalWallet(personalWallet);
         setSmartWallet(smartWallet);
+        console.log("done set")
     }
+
+
+    const createAccount = async () => {
+        console.log(await personalWallet.getSigner())
+        console.log(await smartWallet.getAddress())
+        const localWalletAddress = await personalWallet.getAddress();
+        const result = await smartWallet.execute(
+            await Transaction.fromContractInfo({
+                contractAddress: "0xE2f4eDf6135d48F979F58f28B48B8eD03fF82FbF",
+                contractAbi: ACCOUNT_FACTORY_ABI,
+                provider: sdk.getProvider(),
+                signer: await personalWallet.getSigner(),
+                method: "createAccount",
+                args: [localWalletAddress, ethers.constants.HashZero],
+                storage: sdk.storage,
+            })
+        )
+        console.log('result:', result);
+    }
+
 
     const transferToken = async () => {
         console.log(await personalWallet.getSigner())
@@ -75,6 +100,7 @@ export default function Home() {
         const result = await smartWallet.executeBatch([
             await Transaction.fromContractInfo({
                 contractAddress: "0x0fC04873a7B51FB4a16EE54Fb3447DbF3C944A3d",
+                // contractAddress: "0x2ef8aa35647530EE276fCBCE2E639F86D8B7F1EB",
                 contractAbi: ERC20_ABI,
                 provider: sdk.getProvider(),
                 signer: await personalWallet.getSigner(),
@@ -84,6 +110,7 @@ export default function Home() {
             }),
             await Transaction.fromContractInfo({
                 contractAddress: "0x0fC04873a7B51FB4a16EE54Fb3447DbF3C944A3d",
+                // contractAddress: "0x2ef8aa35647530EE276fCBCE2E639F86D8B7F1EB",
                 contractAbi: ERC20_ABI,
                 provider: sdk.getProvider(),
                 signer: await personalWallet.getSigner(),
@@ -157,6 +184,7 @@ export default function Home() {
                         <h5>Client address: {clientAddress}</h5>
                         <h5>Smart wallet address: {smartWalletAddress}</h5>
                         <h5>Is deployed: {isDeployed.toString()}</h5>
+                        {!isDeployed && <button className="btn btn-primary" onClick={() => createAccount()}>Create account</button>}
                     </div>
                 }
             </div>
